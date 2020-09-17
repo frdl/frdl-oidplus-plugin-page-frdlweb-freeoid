@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<manifest>
+
+	<type>OIDplusPagePluginPublic</type>
+
+	<info>
+		<name>Frdlweb FreeWEID</name>
+		<author>Frdlweb</author>
+		<version />
+		<descriptionHTML />
+		<oid>1.3.6.1.4.1.37476.9000.108.1000.200200</oid>
+	</info>
+
+	<php>
+		<mainclass>OIDplusPagePublicFreeOIDFrdlweb</mainclass>
+	</php>
+
+	<css>
+	</css>
+
+	<js>
+		<file>script.js</file>
+	</js>
+	
+</manifest>

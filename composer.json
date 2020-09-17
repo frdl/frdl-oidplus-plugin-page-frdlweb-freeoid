@@ -1,0 +1,34 @@
+{
+  "name": "frdl/frdl-oidplus-plugin-page-frdlweb-freeoid",
+  "description": "OIDplusPagePluginPublic: Frdlweb FreeWEID [oidf:1.3.6.1.4.1.37476.9000.108.1000.200200]",
+  "type":"frdl-public",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Till Wehowski",
+      "email": "software@frdl.de",
+      "homepage": "https://frdl.de"
+    },
+	{
+	  "name" : "Daniel Marschall",
+	  "homepage" : "https://www.viathinksoft.com"		  
+	}
+  ],
+  "repositories": [{
+    "type": "composer",
+    "url": "https://packages.frdl.de"
+  }],
+  "require": {
+    "php": ">=7.2",
+	"frdl/frdlweb-composer-installers" : "*"
+  },
+  "require-dev": {
+  
+  },
+  "autoload": {
+	"classmap"  : ["plugins/publicPages/200_frdlweb_freeoid/"]
+  },
+  "autoload-dev": {
+
+  }
+}
