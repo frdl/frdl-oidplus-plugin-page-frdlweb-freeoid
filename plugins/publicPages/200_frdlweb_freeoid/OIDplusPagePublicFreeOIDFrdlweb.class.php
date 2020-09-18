@@ -174,11 +174,41 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePluginPublic {
 	}
 	
 	
-	public function modifyContent($id, &$title, &$icon, &$text) {
-		$obj = OIDplusObject::parse($id);
+   public function modifyContent($id, &$title, &$icon, &$text){
+	    $content = '';
+	$id = explode('$',$id,2)[0];
+//	if (false!==strpos($id, 'weid:') ) {
+	
+	 try{
+	   $obj = OIDplusObject::parse($id);
+	 }catch(\Exception $e){
+		$obj = false; 
+	 }
+	   $weidObj = false;
+	   
+	  
+	   
+	 if(is_object($obj) && null !== $obj && (!$obj->isConfidential() || OIDplus::authUtils()::isAdminLoggedIn() )){  
+	  if($id === $obj->nodeId(true) || $id === $obj->nodeId(false)){	   
+	   $children =$obj->getChildren();
+	  }else{
+		  $weidObj = OIDPlusWeid::parse($id) ;
+		  $children =(is_object($weidObj) && null !== $weidObj && (!$weidObj->isConfidential() && !OIDplus::authUtils()::isAdminLoggedIn() ))   ?  $weidObj->getChildren() :  [];
+	  }
+
+	   $CRUD =(is_object($weidObj) && null !== $weidObj && is_callable([$weidObj, 'renderChildren'])) ? $weidObj->renderChildren($children, '<h4>Children:</h4>') : '';
+	   $content =(false===strpos($content, '%%CRUD%%') ) ? $content.$CRUD :  str_replace('%%CRUD%%', \PHP_EOL.$CRUD.\PHP_EOL.'%%CRUD%%', $content);	   
+	 }
+	//} 
+	   $text.=$content;
+	   
+   }
+	
+	//public function modifyContent($id, &$title, &$icon, &$text) {
+	//	$obj = OIDplusObject::parse($id);
 		
 		//print_r($obj);
-	}
+	//}
 	
 	public function implementsFeature($id) {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.2') return true; // modifyContent
@@ -287,7 +317,7 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePluginPublic {
 		return true;
 	}
 
-	# ---
+
 
 	protected static function freeoid_max_id() {
 		$res = OIDplus::db()->query("select id from ###objects where id like ? order by ".OIDplus::db()->natOrder('id'), array(self::getFreeRootOid(true).'.%'));
@@ -300,6 +330,15 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePluginPublic {
 	}
 
 	public function tree_search($request) {
-		return false;
+		$ary = array();
+		if ($obj = OIDplusObject::parse($request)) {
+			if ($obj->userHasReadRights()) {
+				do {
+					$ary[] = $obj->nodeId();
+				} while ($obj = $obj->getParent());
+				$ary = array_reverse($ary);
+			}
+		}
+		return $ary;
 	}
 }
