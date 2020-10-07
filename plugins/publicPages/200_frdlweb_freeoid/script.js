@@ -38,6 +38,7 @@ function freeWEIDFormOnSubmit() {
 		url: "ajax.php",
 		type: "POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.9000.108.1000.200200",
 			action: "request_freeweid",
 			email: $("#email").val(),
@@ -69,6 +70,7 @@ function activateFreeWEIDFormOnSubmit() {
 		url: "ajax.php",
 		type: "POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.9000.108.1000.200200",
 			action: "activate_freeweid",
 			email: $("#email").val(),
