@@ -19,9 +19,14 @@
 
 
 
-class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePluginPublic {
-
-	private static function getFreeRootOid($with_ns) {
+class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePublicObjects {
+	public function whoisObjectAttributes($id, &$out){
+		 call_user_func_array([$this->oidObject, __FUNCTION__], func_get_args());
+	}
+	public function whoisRaAttributes($email, &$out){
+		 call_user_func_array([$this->oidObject, __FUNCTION__], func_get_args());
+	}
+	public static function getFreeRootOid($with_ns) {
 		return ($with_ns ? 'oid:' : '').OIDplus::config()->getValue('freeweid_root_oid');
 	}
 
@@ -176,8 +181,9 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePluginPublic {
 	
    public function modifyContent($id, &$title, &$icon, &$text){
 	    $content = '';
+	   $CRUD = '';
 	$id = explode('$',$id,2)[0];
-//	if (false!==strpos($id, 'weid:') ) {
+	if (false!==strpos($id, 'weid:') ) {
 	
 	 try{
 	   $obj = OIDplusObject::parse($id);
@@ -188,7 +194,7 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePluginPublic {
 	   
 	  
 	   
-	 if(is_object($obj) && null !== $obj && (!$obj->isConfidential() || OIDplus::authUtils()::isAdminLoggedIn() )){  
+	 if(is_object($obj) && null !== $obj && 'weid' === $obj::ns() && (!$obj->isConfidential() || OIDplus::authUtils()::isAdminLoggedIn() )){  
 	  if($id === $obj->nodeId(true) || $id === $obj->nodeId(false)){	   
 	   $children =$obj->getChildren();
 	  }else{
@@ -197,11 +203,14 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePluginPublic {
 	  }
 
 	   $CRUD =(is_object($weidObj) && null !== $weidObj && is_callable([$weidObj, 'renderChildren'])) ? $weidObj->renderChildren($children, '<h4>Children:</h4>') : '';
-	   $content =(false===strpos($content, '%%CRUD%%') ) ? $content.$CRUD :  str_replace('%%CRUD%%', \PHP_EOL.$CRUD.\PHP_EOL.'%%CRUD%%', $content);	   
+	  
 	 }
-	//} 
+	}  
+	   $content =(false===strpos($content, '%%CRUD%%') ) ? $content.$CRUD :  str_replace('%%CRUD%%', \PHP_EOL.$CRUD.\PHP_EOL.'%%CRUD%%', $content);	   
+	  
+	   $handled = false;
+	//  parent::gui($id, $content2, $handled);
 	   $text.=$content;
-	   
    }
 	
 	//public function modifyContent($id, &$title, &$icon, &$text) {
@@ -212,8 +221,8 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePluginPublic {
 	
 	public function implementsFeature($id) {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.2') return true; // modifyContent
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.4') return true; // publicPages, whoisObjectAttributes($id, &$out),  whoisRaAttributes($email, &$out)
 	//	if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.3') return true; // beforeObject*, afterObject*
-	//	if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.4') return true; // whois*Attributes
 		return false;
 	}
 	
@@ -221,7 +230,7 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePluginPublic {
 	public function gui($id, &$out, &$handled) {
 		if (empty(self::getFreeRootOid(false))) return;
 
-		if (explode('$',$id)[0] == 'om.frdlweb.freeweid') {
+		if (explode('$',$id)[0] == 'com.frdlweb.freeweid') {
 			$handled = true;
 
 			$out['title'] = 'Register a free OID/WEID';
@@ -296,7 +305,7 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePluginPublic {
 
 	public function publicSitemap(&$out) {
 		if (empty(self::getFreeRootOid(false))) return;
-		$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('om.frdlweb.freeweid');
+		$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('com.frdlweb.freeweid');
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
@@ -309,7 +318,7 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePluginPublic {
 		}
 
 		$json[] = array(
-			'id' => 'om.frdlweb.freeweid',
+			'id' => 'com.frdlweb.freeweid',
 			'icon' => $tree_icon,
 			'text' => 'Register a free WEID'
 		);
