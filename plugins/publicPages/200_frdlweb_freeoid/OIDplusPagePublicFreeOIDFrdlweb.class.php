@@ -21,10 +21,10 @@
 
 class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePublicObjects {
 	public function whoisObjectAttributes($id, &$out){
-		 call_user_func_array([$this->oidObject, __FUNCTION__], func_get_args());
+		
 	}
 	public function whoisRaAttributes($email, &$out){
-		 call_user_func_array([$this->oidObject, __FUNCTION__], func_get_args());
+		 
 	}
 	public static function getFreeRootOid($with_ns) {
 		return ($with_ns ? 'oid:' : '').OIDplus::config()->getValue('freeweid_root_oid');
