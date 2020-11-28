@@ -1,4 +1,4 @@
-<?php
+<<?php
 
 /*
  * OIDplus 2.0
@@ -182,6 +182,7 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePublicObjects {
    public function modifyContent($id, &$title, &$icon, &$text){
 	    $content = '';
 	   $CRUD = '';
+	 
 	$id = explode('$',$id,2)[0];
 	if (false!==strpos($id, 'weid:') ) {
 	
@@ -189,7 +190,9 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePublicObjects {
 	   $obj = OIDplusObject::parse($id);
 	 }catch(\Exception $e){
 		$obj = false; 
-	 }
+	 }  
+		 
+		//die(print_r($obj,true).'<br />'.$id.'<br />'.$title.'<br />'.$text);
 	   $weidObj = false;
 	   
 	  
@@ -211,6 +214,9 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePublicObjects {
 	   $handled = false;
 	//  parent::gui($id, $content2, $handled);
 	   $text.=$content;
+	   
+	   $title = (is_object($weidObj) && null !== $weidObj && is_callable([$weidObj, 'getTitle'])) ? $weidObj->getTitle() 
+		   :  ((is_object($obj) && null !== $obj && is_callable([$obj, 'getTitle'])) ? $obj->getTitle() : $title);//'{ERROR_TITLE_'.__METHOD__.__LINE__) ;
    }
 	
 	//public function modifyContent($id, &$title, &$icon, &$text) {
@@ -350,4 +356,5 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePublicObjects {
 		}
 		return $ary;
 	}
+	
 }
