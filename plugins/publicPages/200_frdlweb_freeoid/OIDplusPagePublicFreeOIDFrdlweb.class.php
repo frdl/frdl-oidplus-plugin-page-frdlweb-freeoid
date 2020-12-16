@@ -1,4 +1,4 @@
-<<?php
+<?php
 
 /*
  * OIDplus 2.0
@@ -62,7 +62,7 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePublicObjects {
 			$activate_url = OIDplus::getSystemUrl() . '?goto='.urlencode('oidplus:com.frdlweb.freeoid.activate_freeweid$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('com.frdlweb.freeoid.activate_freeweid;'.$email.';'.$timestamp));
 
 			$message = file_get_contents(__DIR__ . '/request_msg.tpl');
-			$message = str_replace('{{SYSTEM_URL}}', OIDplus::getSystemUrl(), $message);
+			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(), $message);
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
@@ -148,14 +148,14 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePublicObjects {
 			$message .= "URL for more information: $url\n";
 			$message .= "OID Name: $title\n";
 			$message .= "\n";
-			$message .= "More details: ".OIDplus::getSystemUrl()."?goto=oid:$new_oid\n";
+			$message .= "More details: ".OIDplus::webpath()."?goto=oid:$new_oid\n";
 
 			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title')." - OID $new_oid registered", $message, OIDplus::config()->getValue('global_cc'));
 
 			// Send delegation information to user
 
 			$message = file_get_contents(__DIR__ . '/allocated_msg.tpl');
-			$message = str_replace('{{SYSTEM_URL}}', OIDplus::getSystemUrl(), $message);
+			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(), $message);
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{NEW_OID}}', $new_oid, $message);
