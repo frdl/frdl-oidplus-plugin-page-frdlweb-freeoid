@@ -39,7 +39,7 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePublicObjects {
 			
 			$hasFeature = $this->raHasFreeWeid($email, false);					
 			if ($hasFeature) {
-				throw new OIDplusException('Your RA is already registered for oneOf the FREE-WEID featured OIDs.');
+				throw new OIDplusException('Your RA is <a href="'.OIDplus::webpath()."?goto=oid:".$this->raHasFreeWeid($email, true).'">already registered</a> for oneOf the FREE-WEID featured OIDs.');
 			}
 			/*	//$out['text'] = 'Your RA is already registered for oneOf the FREE-WEID featured OIDs.';
 			
