@@ -258,6 +258,9 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePublicObjects {
 	   
 	   $title = (is_object($weidObj) && null !== $weidObj && is_callable([$weidObj, 'getTitle'])) ? $weidObj->getTitle() 
 		   :  ((is_object($obj) && null !== $obj && is_callable([$obj, 'getTitle'])) ? $obj->getTitle() : $title);//'{ERROR_TITLE_'.__METHOD__.__LINE__) ;
+	   
+	   
+	   $text = str_replace($_SERVER['DOCUMENT_ROOT'], '***', $text);
    }
 	
 	//public function modifyContent($id, &$title, &$icon, &$text) {
@@ -432,7 +435,7 @@ class OIDplusPagePublicFreeOIDFrdlweb extends OIDplusPagePublicObjects {
 		$json[] = array(
 			'id' => 'com.frdlweb.freeweid',
 			'icon' => $tree_icon,
-			'text' =>  _L('Register a free WEID')
+			'text' =>  str_replace('OID', 'WEID', _L('Register a free OID')),
 		);
 
 		return true;
